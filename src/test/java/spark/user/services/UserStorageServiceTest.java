@@ -10,7 +10,7 @@ import spark.user.User;
 
 public class UserStorageServiceTest 
 {
-    final User u = new User("Thaabit", "Jacobs");
+    final User u = new User("10101", "Thaabit", "Jacobs", "thaabit@gmail.com");
     final UserStorageService dbService = new UserStorageService();
 
     public UserStorageServiceTest() throws SQLException, ClassNotFoundException 
@@ -23,15 +23,7 @@ public class UserStorageServiceTest
     void shouldAddUserToDataBase() throws SQLException
     {
         dbService.addUser(u);
-        assertEquals("Thaabit", dbService.getUser("#TJ").getFirstName());
-        dbService.getConnection().close();
-    }
-
-    @Test
-    void shouldReturnArrayListOfAllUsers() throws SQLException
-    {
-        dbService.addUser(u);
-        assertEquals("Thaabit", dbService.getUsers().get(0).getFirstName());
+        assertEquals("Thaabit", dbService.getUser("10101").getFirstName());
         dbService.getConnection().close();
     }
 
@@ -39,8 +31,8 @@ public class UserStorageServiceTest
     void shouldDeleteUser() throws SQLException
     {
         dbService.addUser(u);
-        dbService.deleteUser("#TJ");
-        assertEquals(null, dbService.getUser("#TJ"));
+        dbService.deleteUser("10101");
+        assertEquals(null, dbService.getUser("10101"));
         dbService.getConnection().close();
     }
 
@@ -48,7 +40,7 @@ public class UserStorageServiceTest
     void shouldReturnForUserExists() throws SQLException
     {
         dbService.addUser(u);
-        assertEquals(true, dbService.userExist("#TJ"));
+        assertEquals(true, dbService.userExist("10101"));
         dbService.getConnection().close();
     }
 }

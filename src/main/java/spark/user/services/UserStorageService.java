@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import spark.user.User;
@@ -36,6 +37,8 @@ public class UserStorageService implements UserService {
     private Statement deleteAllUserStmt;
     private Statement getAllUserStmt;
 
+    private HashMap<String, User> userMap = new HashMap<>();
+
     public UserStorageService() throws SQLException, ClassNotFoundException
     {
             Connection con = DriverManager.getConnection(jdbcURL, "admin", "");
@@ -51,6 +54,8 @@ public class UserStorageService implements UserService {
 
             deleteAllUserStmt = con.createStatement();
             getAllUserStmt = con.createStatement();
+
+            userMap.put("1018", new User("1018", "John", "Miller", "your-email@your-domain.com"));            
 
     }
 
@@ -68,9 +73,7 @@ public class UserStorageService implements UserService {
 
             if(rs.next())
             {
-                User u = new User(rs.getString("FIRSTNAME"), rs.getString("LASTNAME"));
-                u.setId(rs.getString("USER_ID"));
-                u.setId(rs.getString("EMAIL"));
+                User u = new User(rs.getString("USER_ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"));
 
                 return u;
             }
@@ -101,21 +104,17 @@ public class UserStorageService implements UserService {
     }
 
     @Override
-    public List<User> getUsers()
+    public Collection<User> getUsers()
     {
-        List<User> userList = new ArrayList<>();
-
         try
         {
             rs = getAllUserStmt.executeQuery(getAllUserSql);
 
             if(rs.next())
             {
-                User u = new User(rs.getString("FIRSTNAME"), rs.getString("LASTNAME"));
-                u.setId(rs.getString("USER_ID"));
-                u.setId(rs.getString("EMAIL"));
+                User u = new User(rs.getString("USER_ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"));
 
-                userList.add(u);
+                userMap.put(u.getId(), u);
             }
         } catch(SQLException sqle)
         {
@@ -123,7 +122,7 @@ public class UserStorageService implements UserService {
             sqle.printStackTrace();
         }
         
-        return userList;
+        return userMap.values();
     }
 
     @Override

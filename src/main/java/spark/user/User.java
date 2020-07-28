@@ -7,12 +7,12 @@ public class User
     private String lastName;
     private String email;
 
-    public User(String firstName, String lastName)
+    public User(String id, String firstName, String lastName, String email)
     {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = this.firstName + this.lastName + "@user.com";
-        this.id = "#" + this.firstName.substring(0, 1) + this.lastName.substring(0, 1); 
+        this.email = email;
+        this.id = id; 
     }
     
     public String getId()
